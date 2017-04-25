@@ -8,7 +8,7 @@ Vue.use(Router);
 export default new Router({
   // mode: 'history',
   linkActiveClass: 'active',
-  base:'/eleme/',
+  // base:'/eleme/',
   routes: [
     {
       path: '/',
