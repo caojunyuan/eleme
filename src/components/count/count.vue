@@ -6,7 +6,7 @@
       </div>
     </transition>
     <div class="num" v-show="food.count > 0">{{food.count}}</div>
-    <div class="add" @click.stop="add($event)">
+    <div class="add" @click.stop="add">
       <span class="icon-add_circle"></span>
     </div>
   </div>
@@ -24,13 +24,14 @@
       };
     },
     methods: {
-      add () {
+      add (event) {
         if (!event._constructed) return;
         if (!this.food.count) {
           Vue.set(this.food, 'count', 1);
         } else {
           this.food.count++;
         }
+        this.$emit('addEvent', event.target);
       },
       minus () {
         if (!event._constructed) return;
@@ -41,7 +42,7 @@
 
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style type="text/stylus" lang="stylus" rel="stylesheet/stylus">
   .count
     font-size: 0
     .minus, .add

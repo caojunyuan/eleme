@@ -13,35 +13,48 @@
       </div>
     </div>
     <div class="content">
+      <keep-alive>
       <router-view :seller="seller"></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/ECMAScript-6">
   import header from './components/header/header';
+  import {urlParse} from './common/js/urlParse';
   const ERR_OK = 0;
   export default {
     data() {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            let urlParams = urlParse();
+            return urlParams.id;
+          })()
+        }
       };
     },
     created() {
-      this.$http.get('static/data.json').then((res) => {
-//        res = res.body;
-//        if (res.errno === ERR_OK) {
-          this.seller = res.data.seller
-//        }
+      this.$http.get('/api/seller?id=' + this.seller.id).then((res) => {
+       res = res.body;
+       if (res.errno === ERR_OK) {
+          this.seller = Object.assign({}, this.seller, res.data);
+       }
       });
     },
+    // 在gitHub上的版本
+    // his.$http.get('static/data,json).then((res) => {
+    //       this.seller = res.data.seller;
+    //   });
+    // },
     components: {
       'v-header': header
     }
   };
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style type="text/stylus" lang="stylus" rel="stylesheet/stylus">
   @import "./common/stylus/mixins.styl";
   #app
     height: 100%

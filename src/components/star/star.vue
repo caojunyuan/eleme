@@ -44,8 +44,6 @@
     font-size ：0
     .star-item
       display: inline-block
-      &:last-child
-        margin-right: 0
     &.star-48
       .star-item
         width: 20px
@@ -53,6 +51,8 @@
         margin-right: 22px
         background-size: 20px 20px
         background-repeat: no-repeat
+        &:last-child
+          margin-right: 0
         &.on
           background-img('star48_on')
         &.half
@@ -71,6 +71,8 @@
           background-img('star36_half')
         &.off
           background-img('star36_off')
+        &:last-child
+          margin-right: 0          
     &.star-24
       .star-item
         width: 10px
@@ -83,4 +85,6 @@
           background-img('star24_half')
         &.off
           background-img('star24_off')
+        &:last-child
+          margin-right: 0
 </style>

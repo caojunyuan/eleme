@@ -1,45 +1,58 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper" ref="menuWrapper">
+    <div class="menu-wrapper"
+         ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" class="menu-item"
+        <li v-for="(item,index) in goods"
+            class="menu-item"
             :class="{current : currentIndex === index}"
             @click="selectFoods(index,$event)">
           <span class="text border-1px"><span v-if="item.type > 0" class="icon" :class="classMap[item.type]"></span>{{item.name}}</span>
         </li>
       </ul>
     </div>
-    <div class="goods-wrapper" ref="goodsWrapper">
+    <div class="goods-wrapper"
+         ref="goodsWrapper">
       <ul>
-        <li v-for="item in goods" class="foods-list">
+        <li v-for="item in goods"
+            class="foods-list">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item" @click="selectFood(food,$event)">
+            <li v-for="food in item.foods"
+                class="food-item"
+                @click="selectFood(food,$event)">
               <div class="food-icon">
-                <img width="57" height="57" :src="food.icon" alt="">
+                <img width="57"
+                     height="57"
+                     :src="food.icon"
+                     alt="">
               </div>
               <div class="food-content">
                 <h2 class="food-name">{{food.name}}</h2>
-                <div v-if="food.description" class="food-desc">{{food.description}}</div>
+                <div v-if="food.description"
+                     class="food-desc">{{food.description}}
+                </div>
                 <div class="other-msg"><span class="sell-count">月售{{food.sellCount}}份</span><span class="rating">{{food.rating}}%</span>
                 </div>
                 <div class="food-price">
-                  <span class="now-price">￥{{food.price}}</span><span v-if="food.oldPrice" class="old-price">￥{{food.oldPrice}}</span>
+                  <span class="now-price">￥{{food.price}}</span><span v-if="food.oldPrice"
+                                                                      class="old-price">￥{{food.oldPrice}}</span>
                 </div>
               </div>
               <div class="count-wrapper">
-                <count :food="food"></count>
+                <count :food="food" @addEvent="startElem"></count>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shopcart :goods="goods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
-    <food :food="selectedFood" ref="food"></food>
-
+    <shopcart :goods="goods"
+              :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice" ref="shopcart"></shopcart>
+    <food :food="selectedFood"
+          ref="food"></food>
   </div>
-
 </template>
 
 <script type="text/ecmascript-6">
@@ -47,7 +60,7 @@
   import shopcart from '../shopcart/shopcart';
   import count from '../count/count';
   import food from '../food/food';
-  const ERR_OK = 0;
+  // const ERR_OK = 0;
   export default {
     components: {
       shopcart, count, food
@@ -65,7 +78,7 @@
       };
     },
     computed: {
-      currentIndex () {
+      currentIndex() {
         for (let i = 0, len = this.heightArray.length; i < len; i++) {
           let height1 = this.heightArray[i];
           let height2 = this.heightArray[i + 1];
@@ -78,14 +91,14 @@
     },
     created() {
       this.$http.get('static/data.json').then((res) => {
-//        res = res.body;
-//        if (res.errno === ERR_OK) {
-          this.foods = res.data.foods;
-          this.$nextTick(() => {
-            this.initScroll();
-            this.calcHeight();
-          });
-//        }
+        //        res = res.body;
+        //        if (res.errno === ERR_OK) {
+        this.goods = res.data.goods;
+        this.$nextTick(() => {
+          this.initScroll();
+          this.calcHeight();
+        });
+        //        }
       });
     },
     methods: {
@@ -122,12 +135,18 @@
         }
         this.selectedFood = food;
         this.$refs.food.show();
+      },
+      startElem(el) {
+          // 重绘之后执行，提升体验
+        this.$nextTick(() => {
+          this.$refs.shopcart.drop(el);
+        });
       }
     }
   };
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style type="text/stylus" lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
   .goods
     position: absolute

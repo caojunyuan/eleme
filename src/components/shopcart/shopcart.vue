@@ -30,9 +30,19 @@
         </div>
       </div>
     </transition>
+    <div class="balls-container">
+      <div v-for="ball in balls">
+        <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+          <div class="ball" v-show="ball.show">
+            <div class="inner js-inner"></div>
+          </div>
+        </transition>
+      </div>
+    </div>
     <transition name="fade">
       <div class="mask" v-show="listShow" @click="toggleShowList"></div>
     </transition>
+
   </div>
 
 </template>
@@ -46,7 +56,25 @@
     },
     data() {
       return {
-        fold: true
+        fold: true,
+        balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+        ],
+        dropBalls: []
       };
     },
     props: {
@@ -73,6 +101,61 @@
       pay() {
         if (this.totalPrice < this.minPrice) return;
         window.alert(`支付${this.totalPrice}`);
+      },
+      /**
+       * @param el 点击时加号的元素
+       */
+      drop(el) {
+        for (let i = 0, len = this.balls.length; i < len; i++) {
+          let ball = this.balls[i];
+          if (!ball.show) {
+            ball.show = true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            return;
+          }
+        }
+      },
+      /**
+       *
+       * @param el 执行动画的元素
+       */
+      beforeDrop(el) {
+        for (let i = 0, len = this.dropBalls.length; i < len; i++) {
+          let dropBall = this.dropBalls[i];
+          if (dropBall.show) {
+            let addBtnOffset = dropBall.el.getBoundingClientRect();
+            // 小球初始状态的偏移量
+            let x = addBtnOffset.left - 32;
+            let y = -(window.innerHeight - addBtnOffset.top - 22);
+            // 让el元素显示
+            el.style.display = '';
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+            el.style.transform = `translate3d(0,${y}px,0)`;
+            let inner = el.getElementsByClassName('js-inner')[0];
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+            inner.style.transform = `translate3d(${x}px,0,0)`;
+          }
+        }
+      },
+      dropping(el, done) {
+        /* eslint-disable no-unused-vars */
+        let rf = el.offsetHeight; // 触发浏览器重绘
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)';
+          el.style.transform = 'translate3d(0,0,0)';
+          let inner = el.getElementsByClassName('js-inner')[0];
+          inner.style.webkitTransform = 'translate3d(0,0,0)';
+          inner.style.transform = 'translate3d(0,0,0)';
+          el.addEventListener('transitionend', done);
+        });
+      },
+      afterDrop(el) {
+        let ball = this.dropBalls.shift();
+        if (ball) {
+          ball.show = false;
+          el.style.display = 'none';
+        }
       }
     },
     computed: {
@@ -134,7 +217,7 @@
   };
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style type="text/stylus" lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl";
   .shopcart
     position: fixed
@@ -219,6 +302,19 @@
         &.enough
           background-color: #00b43c
           color: #fff
+    .balls-container
+      .ball
+        position: fixed
+        left: 32px
+        bottom: 22px
+        z-index: 200
+        transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        .inner
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: rgb(0, 160, 220)
+          transition: all 0.4s linear
     .cart-list
       position: absolute
       top: 0
