@@ -8,7 +8,7 @@
 ### 移动端演示
 <img src="http://i4.buimg.com/593841/395542d48b2016b6.png" width="25%">
 
-# 安装步骤
+## 安装步骤
 
 ``` bash
 # clone the repo into your disk.
@@ -23,5 +23,6 @@ npm run dev
 # build for production with minification
 npm run build
 ```
-
+## 项目截图
+<img src="http://i4.buimg.com/593841/a9229a751f90eaa8s.png" width="30%"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://i4.buimg.com/593841/9fd71e794844b9cds.png" width="30%"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://i4.buimg.com/593841/c88fc85801d6ed63s.png" width="30%"/>
 
