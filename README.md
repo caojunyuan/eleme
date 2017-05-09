@@ -24,4 +24,4 @@ npm run dev
 npm run build
 ```
 ## 项目截图
-<img src='http://i4.buimg.com/593841/22ffd3c6b6975882.jpg'>
+<img src='http://i4.buimg.com/593841/22ffd3c6b6975882s.jpg'>
