@@ -44,7 +44,7 @@
       });
     },
     // 在gitHub上的版本
-    // his.$http.get('static/data,json).then((res) => {
+    // his.$http.get('static/data.json).then((res) => {
     //       this.seller = res.data.seller;
     //   });
     // },
